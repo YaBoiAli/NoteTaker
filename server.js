@@ -22,7 +22,11 @@ app.get('/notes', (req, res) =>
 );
 
 app.get('/api/notes', (req,res) =>{
-    fs.readFile('Develop/db/db.json', 'utf8', (error, data) => res.json(data))
+  res.json(db);
+});
+
+app.delete('/notes/:id', (req, res) => {
+  console.log("delete review");
 });
 
 app.post('/api/notes', (req, res) => {
