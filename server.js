@@ -2,6 +2,8 @@ const express = require("express");
 const path = require("path");
 const fs = require('fs');
 const db = require('./Develop/db/db.json');
+const { v4: uuidv4 } = require('uuid');
+
 
 const app = express();
 const PORT = 3001;
@@ -26,16 +28,39 @@ app.get('/api/notes', (req,res) =>{
 });
 
 app.delete('/notes/:id', (req, res) => {
-  console.log("delete review");
+  const noteId = req.params.id;
+
+  // Find the index of the note with the matching ID
+  const noteIndex = db.findIndex(note => note.id === noteId);
+
+  if (noteIndex !== -1) {
+    // Remove the note from the array
+    db.splice(noteIndex, 1);
+
+    // Save the updated array to the db.json file
+    fs.writeFile('Develop/db/db.json', JSON.stringify(db), (err) =>
+      err ? res.json(err) : res.json('Note deleted!')
+    );
+  } else {
+    res.status(404).json('Note not found!');
+  }
 });
 
 app.post('/api/notes', (req, res) => {
-    db.push(req.body)
-    fs.writeFile('Develop/db/db.json', JSON.stringify(db), (err) =>
-    err ? res.json(err) : res.json('Success!')
- ); 
-})
+  const newNote = {
+    id: uuidv4(), // Generate a unique ID
+    ...req.body // Add the rest of the note data from the request body
+  };
 
+  db.push(newNote);
+  fs.writeFile('Develop/db/db.json', JSON.stringify(db), (err) => {
+    if (err) {
+      res.json(err);
+    } else {
+      res.json('Success!');
+    }
+  });
+});
 
 app.listen(PORT, () => {
     console.log(`App is listening on ${PORT}`);

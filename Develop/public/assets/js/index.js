@@ -43,12 +43,13 @@ const saveNote = (note) =>
   });
 
 const deleteNote = (id) =>
-  fetch(`/api/notes/${id}`, {
+  fetch(`/notes/${id}`, {
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json',
     },
   });
+
 
 const renderActiveNote = () => {
   hide(saveNoteBtn);
@@ -181,5 +182,3 @@ if (window.location.pathname === '/notes') {
 }
 
 getAndRenderNotes();
-
-// why is not reading as an array
