@@ -6,7 +6,7 @@ const { v4: uuidv4 } = require('uuid');
 
 
 const app = express();
-const PORT = 3001;
+const PORT = process.env.PORT || 3000;
 
 
 app.use(express.json());
@@ -62,8 +62,9 @@ app.post('/api/notes', (req, res) => {
   });
 });
 
-app.listen(PORT, () => {
+app.listen(PORT, "0.0.0.0", () => {
     console.log(`App is listening on ${PORT}`);
 });
 
 
+  
